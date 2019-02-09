@@ -1,4 +1,6 @@
 data/
+sequenceextractor.py
+SequenceExtractor-0.4.jar
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
