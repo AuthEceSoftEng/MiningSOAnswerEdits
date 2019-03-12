@@ -31,7 +31,7 @@ def process_text(text, stem = True, removestopwords = True, splitcamelcase = Tru
 	if stem:
 		stemmer = PorterStemmer()
 		tokens = [stemmer.stem(t) for t in tokens]
- 
+
 	return tokens
 
 def cos_sim(X, i):

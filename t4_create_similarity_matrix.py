@@ -1,7 +1,5 @@
 import csv
-from itertools import compress
-from properties import data_path 
-from numpy import array, logical_and, logical_or
+from properties import data_path
 from helpers import model_exists, create_model, load_model, execute_model, cos_sim, lcs_scores
 
 lines = []
@@ -15,7 +13,7 @@ with open(data_path + 'edit_differences.csv', 'r', encoding='utf-8') as diff:
 		if linenum % 500 == 0:
 			print("%d%%" % (100 * linenum / 8273))
 
-indexes = [line[headers['IdAfter']] for line in lines] # keep IdAfter as the id
+indexes = [line[headers['IdAfter']] for line in lines]  # Keep IdAfter as the id
 comments = [line[headers['Comment']] for line in lines]
 texts = [line[headers['TextBefore']] for line in lines]
 textdiffs = [line[headers['TextAdditions']] for line in lines]
@@ -51,6 +49,7 @@ code_tfidf_model = execute_model(code_vectorizer, codes)
 code_diff_tfidf_model = execute_model(code_vectorizer, codediffs)
 code_diff_tfidf_modeld = execute_model(code_vectorizer, codediffsd)
 
+# Compute cosine similarity for comment, text, code and lcs score for codesequence
 with open(data_path + 'similarity_matrix.csv', 'w', encoding='utf-8') as outfile_cs:
 	outfile_cs.write('IdOne;IdTwo;CommentScore;TextBeforeScore;TextAdditionsScore;TextDeletionsScore;CodeBeforeScore;CodeAdditionsScore;CodeDeletionsScore;CodeSequenceBeforeScore;CodeSequenceAdditionsScore;CodeSequenceDeletionsScore\n')
 	for i, line in enumerate(lines):

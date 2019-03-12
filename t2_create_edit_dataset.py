@@ -1,14 +1,11 @@
-import codecs
 import csv
-
-from sequenceextractor import SequenceExtractor
+import codecs
 import pandas as pd
-
+from sequenceextractor import SequenceExtractor
 from properties import data_path, sequence_extractor_path
 
 sequence_extractor = SequenceExtractor(sequence_extractor_path)
 
-# open file with data from sql queries and save them to a dataframe
 with codecs.open(data_path + 'answer_posts_with_edits.csv', 'r', encoding='utf-8') as data:
 	linenum = 0
 	lines = {}
@@ -20,7 +17,6 @@ with codecs.open(data_path + 'answer_posts_with_edits.csv', 'r', encoding='utf-8
 			print("%d%%" % (100 * linenum / 423240))
 print("Done reading data")
 
-# create a new dataframe for the differences
 diff = []
 counter = 0
 
@@ -29,8 +25,8 @@ for i, row in lines.items():
 	if counter % 1000 == 0:
 		print("Processing %d out of %d" % (counter, len(lines)))
 	j = row[headers['PredPostHistoryId']].strip('.0')
-	# check if predhistoryid exist in data so as to compare with
-	# and filter out also comments with less or equal than 10 characters and less or equal than than 2 words
+	# Check if predhistoryid exist in data so as to compare with
+	# and filter out also comments with less or equal than 10 characters and less or equal than 2 words
 	if (not row[headers['Comment']].endswith('characters in body')) and \
 			(not row[headers['Comment']].endswith('character in body')) and \
 			(not row[headers['Comment']] == 'edited body') and \
@@ -61,15 +57,11 @@ for i, row in lines.items():
 			codetype2 = -1
 			code2 = ''
 		
-		# find differences 
-		#a = f.diff(text1, text2)
-		#b = f.diff(code1, code2)
-		# check if code block has some codetype from sequence extractor
+		# Check if code block has some codetype from sequence extractor
 		if (not(codetype1 == -1 or codetype1 == '[]')) and (not(codetype2 == -1 or codetype2 == '[]')):
 			diff.append([j, i, com1, text2, text1, code2, code1, codetype2, codetype1])
 
 diff = pd.DataFrame.from_records(diff, columns=['IdBefore', 'IdAfter', 'Comment', 'TextBefore', 'TextAfter', 'CodeBefore', 'CodeAfter', 'CodeSequenceBefore', 'CodeSequenceAfter'])
 
-# save the differences dataframe to a csv file
 diff.to_csv(data_path + 'edits.csv', sep='\t', encoding='utf-8')
 

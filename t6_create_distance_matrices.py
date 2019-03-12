@@ -1,10 +1,6 @@
-import os
 import csv
-import json
 import pickle
-import itertools
 from properties import data_path
-from collections import defaultdict
 
 scores = ["CommentScore", "TextAdditionsScore", "TextDeletionsScore", "CodeAdditionsScore", "CodeDeletionsScore", "CodeSequenceAdditionsScore", "CodeSequenceDeletionsScore"]
 avg = lambda x: sum(x) / len(x)
@@ -25,7 +21,7 @@ with open(data_path + 'filtered_similarity_matrix.csv', 'r', encoding='utf-8') a
 print("Done loading!")
 print(len(indexes))
 
-# https://stackoverflow.com/a/36867493
+# Create distance matrix as in https://stackoverflow.com/a/36867493
 sdistances = []
 sdistances_comment = []
 for i in range(len(indexes)):
@@ -37,16 +33,16 @@ for i in range(len(indexes)):
 	if i % 100 == 0:
 		print("%d%%" % (100 * i / len(indexes)))
 
-# https://stackoverflow.com/a/36867493
+# Create upper triangular distance matrix as in https://stackoverflow.com/a/36867493
 keys, values = [], []
 for i in range(len(indexes)):
-	for j in range(i+1, len(indexes)):
+	for j in range(i + 1, len(indexes)):
 		keys.append((indexes[i], indexes[j]))
 		values.append(lines.pop((indexes[i], indexes[j]), 1))
 	if i % 100 == 0:
-		print("%d%%" %(100 * i / len(indexes)))
+		print("%d%%" % (100 * i / len(indexes)))
 
-# https://stackoverflow.com/a/51678381
+# Create condensed distance matrix https://stackoverflow.com/a/51678381
 sorted_keys, distances = keys, values
 labels = sorted(set([key[0] for key in sorted_keys] + [sorted_keys[-1][-1]]))
 

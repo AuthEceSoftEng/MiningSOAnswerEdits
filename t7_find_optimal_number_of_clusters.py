@@ -1,9 +1,6 @@
-import os
-import csv
 import json
 import pickle
 import itertools
-import numpy as np
 from kneed import KneeLocator
 import matplotlib.pyplot as plt
 from properties import data_path 
@@ -26,10 +23,10 @@ totalcohc = []
 
 Z = hierarchy.linkage(distances, method='average')
 for n_clusters in cluster_range:
-	t = Z[-(n_clusters-0), 2]
+	t = Z[-(n_clusters - 0), 2]
 	C = hierarchy.fcluster(Z, t=t, criterion='distance')  
-
-	print("Number of clusters: " + str(len(set(C))), end = '\t') #  + " (t: " + str(t) + ")"
+	print("Number of clusters: " + str(len(set(C))), end='\t')
+	# Compute cohesion score based on comment distance matrix 
 	cohc = cohesion_score(sdistances_comment, C)
 	totalcohc.append(cohc)
 	print("Cohesion (C): " + str(cohc))
@@ -54,10 +51,9 @@ print(kn.knee)
 
 plt.figure(figsize=(5, 3.5))
 plt.plot(INDEXES, SSE, '.-')
-plt.axvline(x=kn.knee, color = '#ff7f0e', linestyle = '--')
+plt.axvline(x=kn.knee, color='#ff7f0e', linestyle='--')
 plt.xlabel('Number of Clusters')
 plt.ylabel('SSE')
 plt.tight_layout()
 plt.savefig('clusters-vs-sse.pdf')
 plt.show()
-

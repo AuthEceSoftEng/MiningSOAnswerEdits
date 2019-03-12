@@ -1,10 +1,7 @@
-import codecs
 import csv
-
-from sequenceextractor import SequenceExtractor
+import codecs
 import pandas as pd
-
-from properties import data_path, sequence_extractor_path
+from properties import data_path
 from helpers import process_text, listdiff
 
 diff = []
@@ -25,7 +22,8 @@ for i, row in enumerate(diff):
 	if counter % 1000 == 0:
 		print("Processing %d out of %d" % (counter, len(diff)))
 
-	try:
+	try: 
+		# Tokenize text, code, codesequence (before and after the edit) and save the differences 
 		tokensTextBefore = process_text(row[headers['TextBefore']], False, False, False)
 		tokensTextAfter = process_text(row[headers['TextAfter']], False, False, False)
 		tokensTextDiff = listdiff(tokensTextBefore, tokensTextAfter)
@@ -33,7 +31,7 @@ for i, row in enumerate(diff):
 
 		row[headers['TextBefore']] = ' '.join(tokensTextBefore)
 		row[headers['TextAfter']] = ' '.join(tokensTextAfter)
-
+		
 		tokensCodeBefore = process_text(row[headers['CodeBefore']], False, False, False)
 		tokensCodeAfter = process_text(row[headers['CodeAfter']], False, False, False)
 		tokensCodeDiff = listdiff(tokensCodeBefore, tokensCodeAfter)
@@ -41,17 +39,19 @@ for i, row in enumerate(diff):
 
 		row[headers['CodeBefore']] = ' '.join(tokensCodeBefore)
 		row[headers['CodeAfter']] = ' '.join(tokensCodeAfter)
-
+		
 		codeSequenceBefore = [s.strip() for s in row[headers['CodeSequenceBefore']][1:-1].split(', ') if s]
 		codeSequenceAfter = [s.strip() for s in row[headers['CodeSequenceAfter']][1:-1].split(', ') if s]
 		codeSequenceDiff = listdiff(codeSequenceBefore, codeSequenceAfter)
-		if len(codeSequenceDiff) < 1: # filter out edits without code differences (at least 1 command)
+		
+		if len(codeSequenceDiff) < 1:  # Filter out edits without code differences (at least 1 command)
 			continue
 		row.append('[' + ', '.join(codeSequenceDiff) + ']')
 
 		row[headers['CodeSequenceBefore']] = '[' + ', '.join(codeSequenceBefore) + ']'
 		row[headers['CodeSequenceAfter']] = '[' + ', '.join(codeSequenceAfter) + ']'
 
+		# Save additions(+) and deletions(-) 
 		row.append(' '.join([t[2:] for t in tokensTextDiff if t.startswith('+')]))
 		row.append(' '.join([t[2:] for t in tokensTextDiff if t.startswith('-')]))
 		row.append(' '.join([t[2:] for t in tokensCodeDiff if t.startswith('+')]))

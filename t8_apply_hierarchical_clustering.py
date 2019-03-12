@@ -1,8 +1,5 @@
-import os
 import csv
-import json
 import pickle
-import itertools
 from properties import data_path
 from collections import defaultdict
 from scipy.cluster import hierarchy
@@ -15,7 +12,7 @@ print("Done loading!")
 
 Z = hierarchy.linkage(distances, method='average')
 n_clusters = 390
-t = Z[-(n_clusters-0), 2]
+t = Z[-(n_clusters - 0), 2]
 C = hierarchy.fcluster(Z, t=t, criterion='distance')  
 print("Done clustering!")
 print("Number of clusters: " + str(len(set(C))))
@@ -54,16 +51,17 @@ for i in range(max(clusters_temp.values())):
 		if i == value:
 			clusters[i].append(key)
 
-sorted_clusters = list(sorted(clusters, key = lambda x: len(clusters[x]), reverse = True))
+sorted_clusters = list(sorted(clusters, key=lambda x: len(clusters[x]), reverse=True))
 
-with open(data_path + 'cluster_names.txt', 'w', encoding ='utf-8') as outfile:
+# Find the 5 most representative comments of each cluster based on mean distance from all cluster comments
+with open(data_path + 'cluster_names.txt', 'w', encoding='utf-8') as outfile:
 	outfile.write("Total clusters: " + str(len(clusters)) + '\n')
 	for cluster_id in sorted_clusters:
 		cluster_points = clusters[cluster_id]
 		mdist = {}
 		for i in cluster_points:
 			mdist[int(i)] = sum([lines.get((int(i), int(j)), 1) for j in cluster_points if i != j]) / len(cluster_points)
-		sorted_points = list(sorted(mdist, key = lambda x: mdist[x]))
+		sorted_points = list(sorted(mdist, key=lambda x: mdist[x]))
 		outfile.write(str(cluster_id) + "\t" + str(len(clusters[cluster_id])) + '\t')
 		outfile.write(', '.join([comments[i] for i in sorted_points][:5]) + '\n')
 
