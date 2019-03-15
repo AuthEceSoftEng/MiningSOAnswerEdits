@@ -16,7 +16,7 @@ The complete description of our methodology is available at the publication:
 ```
 Themistoklis Diamantopoulos, Maria-Ioanna Sifaki, and Andreas L. Symeonidis.
 "Towards Mining Answer Edits to Extract Evolution Patterns in Stack Overflow."
-Paper submitted at the 16th International Conference on Mining Software
+Paper accepted at the 16th International Conference on Mining Software
 Repositories (MSR '19), 2019.
 ```
 This repository contains all code and instructions required to reproduce the
