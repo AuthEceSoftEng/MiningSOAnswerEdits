@@ -25,7 +25,7 @@ work, you may cite it.
 
 ## Instructions
 Our methodology is applied on the data dump of SOTorrent, which is available
-[here](https://empirical-software.engineering/projects/sotorrent/).
+[here](https://zenodo.org/records/1434285).
 So, the first step is to clone this repository and download also the data dump of SOTorrent.
 The code is actually a collection of scripts that are used to make dat manipulations
 one after the other (we use the numbering t0, t1, t2, ... to dictate the order of
